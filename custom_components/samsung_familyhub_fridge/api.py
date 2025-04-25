@@ -161,7 +161,7 @@ class FamilyHub:
                 and element["attributeName"] == "contents"
             ):
                 self._device_id = element["deviceId"]
-                self._device_label = element.get("deviceLabel")
+                self._device_label = element.get("deviceName")
                 break
 
     def update_camera(self):
