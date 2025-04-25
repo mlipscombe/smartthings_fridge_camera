@@ -75,6 +75,7 @@ class FamilyHub:
         self.images = []
         self._device_status = None
         self._current_device_status = None
+        self._device_info = None
         self.last_closed = None
         self.should_update = False
         self.downloaded_images = [None, None, None]
@@ -91,6 +92,11 @@ class FamilyHub:
         """Get the device label."""
         return self._device_name or "Samsung Family Hub Fridge"
 
+    @property
+    def device_info(self):
+        """Get the device info."""
+        return self._device_info
+
     async def authenticate(self) -> bool:
         """Test if we can authenticate with the host."""
         await self._hass.async_add_executor_job(self.get_all_device_status)
@@ -101,6 +107,13 @@ class FamilyHub:
 
     def set_current_device_status(self, status):
         self._current_device_status = status
+
+    def set_device_info(self, info):
+        """Set device info from API response."""
+        self._device_info = info
+        # Update device name if available in device info
+        if info and "name" in info:
+            self._device_name = info["name"]
 
     def download_images(self):
         """Download the actual camera image from smartthings.
@@ -126,6 +139,13 @@ class FamilyHub:
         """
         return requests.get(
             "https://client.smartthings.com/devices/status",
+            headers=self._headers,
+            timeout=DEFAULT_TIMEOUT,
+        ).json()
+
+    def get_current_device_info(self):
+        return requests.get(
+            f"https://api.smartthings.com/v1/devices/{self.device_id}",
             headers=self._headers,
             timeout=DEFAULT_TIMEOUT,
         ).json()

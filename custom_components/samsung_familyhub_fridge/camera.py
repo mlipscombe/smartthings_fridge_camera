@@ -59,7 +59,7 @@ class FamilyHubCamera(Camera):
         self.content_type = "image/jpeg"
         self.hub = hub
         self._index = index
-        self._name = f"{self.hub.device_name} {CAMERA_NAMES[index]}"
+        self._name = CAMERA_NAMES[index].title()
         self._image = None
         self._attr_unique_id = f"{self.hub.device_id}_{CAMERA_IDS[index]}"
         

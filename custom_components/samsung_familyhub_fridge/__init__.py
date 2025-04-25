@@ -1,5 +1,6 @@
 """The Samsung FamilyHub Fridge integration."""
 from __future__ import annotations
+import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
@@ -7,6 +8,8 @@ from homeassistant.core import HomeAssistant
 
 from .api import FamilyHub
 from .const import DOMAIN
+
+_LOGGER = logging.getLogger(__name__)
 
 # For your initial PR, limit it to 1 platform.
 PLATFORMS: list[Platform] = [Platform.CAMERA, Platform.SENSOR]
@@ -17,9 +20,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
 
     hass.data[DOMAIN][entry.entry_id] = entry
-    hass.data[DOMAIN]["hub"] = FamilyHub(
+    hub = FamilyHub(
         hass, entry.data["token"], entry.data.get("device_id")
     )
+    hass.data[DOMAIN]["hub"] = hub
+
+    # Fetch device info on initial load
+    if hub.device_id:
+        device_info = await hass.async_add_executor_job(hub.get_current_device_info)
+        hub.set_device_info(device_info)
+        _LOGGER.debug("Fetched initial device info: %s", hub.device_name)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
