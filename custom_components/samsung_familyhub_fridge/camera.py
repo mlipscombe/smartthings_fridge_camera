@@ -15,7 +15,7 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 from homeassistant.core import callback
-from .const import DOMAIN
+from .const import DOMAIN, CAMERA_NAMES, CAMERA_IDS
 from .api import FamilyHub, DataCoordinator
 from homeassistant.components.update import (
     UpdateDeviceClass,
@@ -47,24 +47,21 @@ async def async_setup_entry(
     #     {},
     #     "refresh",
     # )
+
     async_add_entities(
-        [
-            FamilyHubCamera("family_hub_top", 0, hub),
-            FamilyHubCamera("family_hub_middle", 1, hub),
-            FamilyHubCamera("family_hub_bottom", 2, hub),
-        ]
+        [FamilyHubCamera(hub, i) for i in CAMERA_IDS.keys()]
     )
 
 
 class FamilyHubCamera(Camera):
-    def __init__(self, name, index, hub):
+    def __init__(self, hub, index):
         super().__init__()
         self.content_type = "image/jpeg"
         self.hub = hub
         self._index = index
-        self._name = name
+        self._name = f"{self.hub.device_name} {CAMERA_NAMES[index]}"
         self._image = None
-        self._attr_unique_id = f"{self.hub.device_id}_{self._name}"
+        self._attr_unique_id = f"{self.hub.device_id}_{CAMERA_IDS[index]}"
         
     @property
     def device_info(self):
