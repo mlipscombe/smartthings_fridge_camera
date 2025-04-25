@@ -64,6 +64,17 @@ class FamilyHubCamera(Camera):
         self._index = index
         self._name = name
         self._image = None
+        self._attr_unique_id = f"{self.hub.device_id}_{self._name}"
+        
+    @property
+    def device_info(self):
+        """Return device information."""
+        return {
+            "identifiers": {("samsung_familyhub_fridge", self.hub.device_id)},
+            "name": self.hub.device_label,
+            "manufacturer": "Samsung",
+            "model": "Family Hub Fridge",
+        }
 
     def camera_image(
         self, width: int | None = None, height: int | None = None
