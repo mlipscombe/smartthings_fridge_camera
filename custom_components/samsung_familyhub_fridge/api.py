@@ -78,7 +78,7 @@ class FamilyHub:
         self.last_closed = None
         self.should_update = False
         self.downloaded_images = [None, None, None]
-        self._device_label = None
+        self._device_name = None
 
     @property
     def device_id(self):
@@ -87,9 +87,9 @@ class FamilyHub:
         return self._device_id
 
     @property
-    def device_label(self):
+    def device_name(self):
         """Get the device label."""
-        return self._device_label or "Samsung Family Hub Fridge"
+        return self._device_name or "Samsung Family Hub Fridge"
 
     async def authenticate(self) -> bool:
         """Test if we can authenticate with the host."""
@@ -161,7 +161,7 @@ class FamilyHub:
                 and element["attributeName"] == "contents"
             ):
                 self._device_id = element["deviceId"]
-                self._device_label = element.get("deviceName")
+                self._device_name = element.get("deviceName")
                 break
 
     def update_camera(self):

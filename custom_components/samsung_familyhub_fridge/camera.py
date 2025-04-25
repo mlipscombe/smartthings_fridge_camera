@@ -71,7 +71,7 @@ class FamilyHubCamera(Camera):
         """Return device information."""
         return {
             "identifiers": {("samsung_familyhub_fridge", self.hub.device_id)},
-            "name": self.hub.device_label,
+            "name": self.hub.device_name,
             "manufacturer": "Samsung",
             "model": "Family Hub Fridge",
         }

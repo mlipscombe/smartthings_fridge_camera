@@ -44,7 +44,7 @@ class LastUpdatedAt(CoordinatorEntity, SensorEntity):
         """Return device information."""
         return {
             "identifiers": {("samsung_familyhub_fridge", self.coordinator.api.device_id)},
-            "name": self.coordinator.api.device_label,
+            "name": self.coordinator.api.device_name,
             "manufacturer": "Samsung",
             "model": "Family Hub Fridge",
         }
