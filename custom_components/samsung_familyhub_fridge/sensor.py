@@ -36,6 +36,18 @@ class LastUpdatedAt(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator):
         self._last_updated_at = None
         super().__init__(coordinator)
+        self._attr_unique_id = f"{coordinator.api.device_id}_last_updated"
+        self._attr_name = "Last Updated"
+        
+    @property
+    def device_info(self):
+        """Return device information."""
+        return {
+            "identifiers": {("samsung_familyhub_fridge", self.coordinator.api.device_id)},
+            "name": "Samsung Family Hub Fridge",
+            "manufacturer": "Samsung",
+            "model": "Family Hub Fridge",
+        }
 
     @property
     def last_updated_at(self) -> str | None:
